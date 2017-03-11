@@ -12,6 +12,23 @@ $theme: mat-light-theme($primary, $accent, $warn);
 @include angular-material-theme($theme);
 
 body {
-  margin: 0 ;
+  margin: 0;
   padding: 0;
+}
+
+.leaflet-tooltip img {
+  width: 14px;
+  height: 14px;
+}
+.leaflet-tooltip .title {
+  font-size: 12px;
+  text-align: center;
+}
+.leaflet-tooltip {
+  font-size: 10px;
+  text-align: left;
+  vertical-align: text-top;
+}
+.leaflet-tooltip .tooltip-row {
+  display: flex;
 }
