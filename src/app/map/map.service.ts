@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { Http, Headers, RequestOptions } from "@angular/http";
-import { Location } from "./location.class";
 import { Map } from "leaflet";
 
 @Injectable()
@@ -21,12 +20,5 @@ export class MapService {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
       })
     };
-  }
-
-  disableMouseEvent(elementId: string) {
-    let element = <HTMLElement>document.getElementById(elementId);
-
-    L.DomEvent.disableClickPropagation(element);
-    L.DomEvent.disableScrollPropagation(element);
   }
 }

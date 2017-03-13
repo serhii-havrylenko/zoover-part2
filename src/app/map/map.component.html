@@ -1,1 +1,31 @@
+<md-toolbar color="primary">
+  <button md-icon-button>
+    <md-icon>home</md-icon>
+  </button>
+
+  <span>Weather map</span>
+  <md2-datepicker placeholder="Select date" [(ngModel)]="date" [min]="minDate" [max]="maxDate" #dateControl="ngModel" (change)="placeMarkers()"></md2-datepicker>
+
+  <div fxFlex class="search-box">
+    <div [hidden]="hideSearch">
+      <button md-icon-button (click)="hideSearch = true">
+        <md-icon>arrow_back</md-icon>
+      </button>
+
+      <md2-autocomplete [items]="items" item-text="name" item-value="name" placeholder="Select City" [(ngModel)]="city" #autocompleteControl="ngModel" (change)="showCityWeather($event)">
+      </md2-autocomplete>
+    </div>
+  </div>
+
+  <button md-icon-button (click)="hideSearch = !hideSearch">
+    <md-icon>search</md-icon>
+  </button>
+</md-toolbar>
+
 <div id="map"></div>
+
+<md-autocomplete #autoCities="mdAutocomplete" (change)="console.log('aaa')">
+  <md-option *ngFor="let city of filteredCities | async" [value]="city">
+    {{ city }}
+  </md-option>
+</md-autocomplete>

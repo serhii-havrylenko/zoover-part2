@@ -1,4 +1,5 @@
 @import '~@angular/material/core/theming/all-theme';
+@import '~@covalent/core/theming/all-theme';
 
 @include mat-core();
 
@@ -10,11 +11,7 @@ $warn:    mat-palette($mat-red, 600);
 $theme: mat-light-theme($primary, $accent, $warn);
 
 @include angular-material-theme($theme);
-
-body {
-  margin: 0;
-  padding: 0;
-}
+@include covalent-theme($theme);
 
 .leaflet-tooltip img {
   width: 14px;
@@ -31,4 +28,8 @@ body {
 }
 .leaflet-tooltip .tooltip-row {
   display: flex;
+}
+
+td-search-box .mat-input-wrapper{
+  padding-bottom: 0;
 }

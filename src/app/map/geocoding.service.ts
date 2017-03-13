@@ -1,17 +1,11 @@
 import { Http, Headers, Response } from "@angular/http";
-import { Location } from "./location.class";
 import { Injectable } from "@angular/core";
 
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/mergeMap";
+import { Location } from "./location.class";
 
 @Injectable()
 export class GeocodingService {
-  http: Http;
-
-  constructor(http: Http) {
-    this.http = http;
-  }
+  constructor(private http: Http) {}
 
   geocode(address: string) {
     return this.http
@@ -35,23 +29,6 @@ export class GeocodingService {
             lat: viewPort.northeast.lat,
             lng: viewPort.northeast.lng
           });
-
-        return location;
-      });
-  }
-
-  getCurrentLocation() {
-    return this.http
-      .get("http://ipv4.myexternalip.com/json")
-      .map(res => res.json().ip)
-      .flatMap(ip => this.http.get("http://freegeoip.net/json/" + ip))
-      .map((res: Response) => res.json())
-      .map(result => {
-        let location = new Location();
-
-        location.address = result.city + ", " + result.region_code + " " + result.zip_code + ", " + result.country_code;
-        location.latitude = result.latitude;
-        location.longitude = result.longitude;
 
         return location;
       });

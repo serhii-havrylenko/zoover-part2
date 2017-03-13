@@ -3,4 +3,22 @@
     top:64px;
     bottom:0;
     width:100%;
+    z-index: 0;
+}
+
+.search-box md-input-container{
+  width: 85%;
+}
+
+.search-box {
+  margin-right: 10px;
+}
+
+md2-datepicker {
+  margin-left: 10px;
+}
+
+md2-autocomplete {
+  display: inline-block;
+  width: 90%;
 }
