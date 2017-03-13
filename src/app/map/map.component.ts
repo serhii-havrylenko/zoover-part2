@@ -85,11 +85,11 @@ export class MapComponent implements OnInit {
     return val ? this.cities.filter((s) => new RegExp(val, 'gi').test(s)) : this.cities;
   }
 
-  showCityWeather(q): void {
-    if (this.city) {
+  showCityWeather(city): void {
+    if (city) {
       let dialogRef = this.dialog.open(WeatherInCityDialog, { width: '650px' });
-      dialogRef.componentInstance.city = this.city;
-      dialogRef.componentInstance.data = this.markers.filter(el => el.place_name == this.city);
+      dialogRef.componentInstance.city = city;
+      dialogRef.componentInstance.data = this.markers.filter(el => el.place_name == city).slice(0, 5);
       dialogRef.afterClosed().subscribe(result => {
         this.city = null;
         this.hideSearch = true;
@@ -118,14 +118,15 @@ export class MapComponent implements OnInit {
         let position = L.latLng(marker.latitude, marker.longitude);
 
         if (Number(marker.temperature_max)) {
-          this.markerGroup.addLayer(
-            L.marker(position, { icon: icon })
-              .bindTooltip(this.buildTooltip(marker), {
-                interactive: false,
-                direction: 'right',
-                permanent: true,
-                offset: [15, 0]
-              }));
+          let m = L.marker(position, { icon: icon })
+            .bindTooltip(this.buildTooltip(marker), {
+              interactive: false,
+              direction: 'right',
+              permanent: true,
+              offset: [15, 0]
+            });
+          m.on('click', (e:any) => this.showCityWeather(marker.place_name));
+          this.markerGroup.addLayer(m);
         }
       }
     });

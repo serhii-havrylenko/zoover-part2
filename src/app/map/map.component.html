@@ -12,7 +12,7 @@
         <md-icon>arrow_back</md-icon>
       </button>
 
-      <md2-autocomplete [items]="items" item-text="name" item-value="name" placeholder="Select City" [(ngModel)]="city" #autocompleteControl="ngModel" (change)="showCityWeather($event)">
+      <md2-autocomplete [items]="items" item-text="name" item-value="name" placeholder="Select City" [(ngModel)]="city" #autocompleteControl="ngModel" (change)="showCityWeather($event.value)">
       </md2-autocomplete>
     </div>
   </div>
