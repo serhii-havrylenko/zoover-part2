@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TdDialogService } from '@covalent/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
@@ -17,6 +17,20 @@ import { WeatherInCityDialog } from '../weather-in-city/weather-in-city-dialog.c
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
+  animations: [trigger(
+    'searchState',
+    [
+      state('invisible', style({
+        visibility: 'hidden',
+        opacity: 0,
+      })),
+      state('visible', style({
+        visibility: 'visible',
+        opacity: 1
+      })),
+      transition('invisible => visible', animate('.7s ease-in')),
+      transition('visible => invisible', animate('.7s ease-out'))
+    ])],
 })
 export class MapComponent implements OnInit {
   private map: any;
@@ -29,7 +43,7 @@ export class MapComponent implements OnInit {
   private minDate: Date = new Date('2014-08-08 00:00:00');
   private maxDate: Date = new Date('2014-08-13 00:00:00');
 
-  private hideSearch: boolean = true;
+  private searchState: string = 'invisible';
   private cityCtrl: FormControl = new FormControl();
   private filteredCities: any;
 
@@ -74,8 +88,8 @@ export class MapComponent implements OnInit {
     this.mapService.map = this.map;
     this.geocoder.geocode("Netherlands")
       .subscribe(
-        location => this.map.fitBounds(location.viewBounds),
-        err => console.error(err)
+      location => this.map.fitBounds(location.viewBounds),
+      err => console.error(err)
       );
 
     this.placeMarkers();
@@ -85,15 +99,17 @@ export class MapComponent implements OnInit {
     return val ? this.cities.filter((s) => new RegExp(val, 'gi').test(s)) : this.cities;
   }
 
+  searchClick() {
+    this.city = '';
+    this.searchState = this.searchState === 'visible' ? 'invisible' : 'visible';
+  }
+
   showCityWeather(city): void {
     if (city) {
       let dialogRef = this.dialog.open(WeatherInCityDialog, { width: '650px' });
       dialogRef.componentInstance.city = city;
       dialogRef.componentInstance.data = this.markers.filter(el => el.place_name == city).slice(0, 5);
-      dialogRef.afterClosed().subscribe(result => {
-        this.city = null;
-        this.hideSearch = true;
-      });
+      dialogRef.afterClosed().subscribe(result => this.searchClick());
     }
   }
 
@@ -125,7 +141,7 @@ export class MapComponent implements OnInit {
               permanent: true,
               offset: [15, 0]
             });
-          m.on('click', (e:any) => this.showCityWeather(marker.place_name));
+          m.on('click', (e: any) => this.showCityWeather(marker.place_name));
           this.markerGroup.addLayer(m);
         }
       }
