@@ -82,7 +82,6 @@ export class MapComponent implements OnInit {
   }
 
   showCityWeather(city: number): void {
-    console.log(this);
     this.weatherService.loadWeatherForecastForCity(city || this.city).subscribe(({data}: any) => {
       let dialogRef = this.dialog.open(WeatherInCityDialog, { width: '650px' });
       dialogRef.componentInstance.city = data.stations[0].place_name;
