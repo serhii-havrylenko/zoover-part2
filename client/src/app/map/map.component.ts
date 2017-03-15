@@ -82,6 +82,7 @@ export class MapComponent implements OnInit {
   }
 
   showCityWeather(city: number): void {
+    console.log(this);
     this.weatherService.loadWeatherForecastForCity(city || this.city).subscribe(({data}: any) => {
       let dialogRef = this.dialog.open(WeatherInCityDialog, { width: '650px' });
       dialogRef.componentInstance.city = data.stations[0].place_name;
@@ -97,10 +98,8 @@ export class MapComponent implements OnInit {
       if (Number(station.forecast[0].temperature_max)) {
         this.mapService.addMarker(
           L.latLng(station.latitude, station.longitude),
-          this.buildTooltip(station.place_name, station.forecast[0]),
-          station.station_id,
-          this.showCityWeather
-        );
+          this.buildTooltip(station.place_name, station.forecast[0])
+        ).on('click', () => this.showCityWeather(station.station_id));
       }
     });
 

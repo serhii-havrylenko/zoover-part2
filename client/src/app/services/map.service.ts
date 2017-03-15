@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as L from 'leaflet';
-import { Map, Icon, LatLng } from 'leaflet';
+import { Map, Icon, LatLng, Marker } from 'leaflet';
 
 import { GeocodingService } from './geocoding.service';
 
@@ -61,7 +61,7 @@ export class MapService {
       );
   }
 
-  addMarker(latLng: LatLng, tooltip: string, id: number, callback: (id: number) => any): void {
+  addMarker(latLng: LatLng, tooltip: string): Marker {
     let m = L.marker(
       L.latLng(latLng), { icon: this.icon })
       .bindTooltip(tooltip, {
@@ -70,8 +70,10 @@ export class MapService {
         permanent: true,
         offset: [15, 0]
       });
-    m.on('click', (e: any) => callback(id));
+
     this.markerGroup.addLayer(m);
+
+    return m;
   }
 
   clearMarkerGroup(): void {
