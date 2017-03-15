@@ -6,8 +6,9 @@ import { HttpModule } from '@angular/http';
 import { CovalentCoreModule } from '@covalent/core';
 import { Md2Module }  from 'md2';
 
-import { GeocodingService } from './map/geocoding.service';
-import { MapService } from './map/map.service';
+import { MapService } from './services/map.service';
+import { GeocodingService } from './services/geocoding.service';
+import { WeatherService } from './services/weather.service';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -47,7 +48,8 @@ export function provideClient(): ApolloClient {
   ],
   providers: [
     MapService,
-    GeocodingService
+    GeocodingService,
+    WeatherService
   ],
   bootstrap: [AppComponent]
 })

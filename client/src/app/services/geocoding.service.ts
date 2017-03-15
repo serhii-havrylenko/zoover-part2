@@ -1,11 +1,11 @@
 import { Http, Headers, Response } from "@angular/http";
 import { Injectable } from "@angular/core";
 
-import { Location } from "./location.class";
+import { Location } from "../location.class";
 
 @Injectable()
 export class GeocodingService {
-  constructor(private http: Http) {}
+  constructor(private http: Http) { }
 
   geocode(address: string) {
     return this.http

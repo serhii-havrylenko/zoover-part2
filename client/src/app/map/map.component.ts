@@ -1,61 +1,17 @@
 import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { TdDialogService } from '@covalent/core';
 import { MdDialog, MdDialogRef } from '@angular/material';
 import { Observable } from 'rxjs';
-import { Apollo } from 'apollo-angular';
-import gql from 'graphql-tag';
 
 // import '@types/leaflet-markercluster';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 
-import { MapService } from './map.service';
-import { GeocodingService } from './geocoding.service';
+import { MapService } from '../services/map.service';
+
+import { WeatherService } from '../services/weather.service';
 
 import { WeatherInCityDialog } from '../weather-in-city/weather-in-city-dialog.component';
-
-
-const queryDateAndStationsNames = gql`
-  query DateAndStationsNames {
-    dates
-    stations {
-      station_id
-      place_name
-    }
-  }
-`;
-const queryWeatherForecastForStation = gql`
-  query WeatherForecastForStation($id: Int) {
-    stations(station_id: $id) {
-      place_name
-      forecast {
-        datetime
-        temperature_max
-        temperature_min
-        precipitation_probability
-        precipitation_mm
-      }
-    }
-  }
-`;
-
-const queryWeatherForecastForDay = gql`
-  query queryWeatherForecastForDay($datetime: String) {
-    stations {
-      station_id
-      place_name
-      latitude
-      longitude
-      forecast(datetime: $datetime) {
-        temperature_max
-        temperature_min
-        precipitation_probability
-        precipitation_mm
-      }
-    }
-  }
-`;
 
 @Component({
   selector: 'app-map',
@@ -77,8 +33,6 @@ const queryWeatherForecastForDay = gql`
     ])],
 })
 export class MapComponent implements OnInit {
-  private map: any;
-  private markerGroup: any;
   private city: number;
   private cities: any[] = [];
 
@@ -92,16 +46,12 @@ export class MapComponent implements OnInit {
 
   constructor(
     private mapService: MapService,
-    private geocoder: GeocodingService,
-    private dialogService: TdDialogService,
-    private apollo: Apollo,
+    private weatherService: WeatherService,
     private dialog: MdDialog
   ) { }
 
   ngOnInit() {
-    this.apollo.watchQuery({
-      query: queryDateAndStationsNames
-    }).subscribe(({data}: any) => {
+    this.weatherService.getDatesAndStations().subscribe(({data}: any) => {
       data.dates.forEach(d => this.dates.push(new Date(d)));
       this.dates = this.dates.sort();
       [this.date, this.minDate, this.maxDate] = [this.dates[0], this.dates[0], this.dates[this.dates.length - 1]];
@@ -112,47 +62,12 @@ export class MapComponent implements OnInit {
       this.displayForecastForDay();
     });
 
-    this.map = L.map("map", {
-      zoomControl: false,
-      center: L.latLng(40.731253, -73.996139),
-      zoom: 12,
-      minZoom: 4,
-      maxZoom: 19,
-      layers: [this.mapService.baseMaps.OpenStreetMap]
-    });
-
-    L.control.zoom({ position: "topright" }).addTo(this.map);
-    L.control.layers(this.mapService.baseMaps).addTo(this.map);
-    L.control.scale().addTo(this.map);
-
-    this.mapService.map = this.map;
-    this.geocoder.geocode("Netherlands")
-      .subscribe(
-      location => this.map.fitBounds(location.viewBounds),
-      err => console.error(err)
-      );
-  }
-
-  loadWeatherForecastForDay(datetime: Date): Observable<any> {
-    return this.apollo.watchQuery({
-      query: queryWeatherForecastForDay,
-      variables: {
-        datetime: datetime.toISOString()
-      }
-    });
-  }
-
-  loadWeatherForecastForCity(id: number): Observable<any> {
-    return this.apollo.watchQuery({
-      query: queryWeatherForecastForStation,
-      variables: {
-        id: id
-      }
-    });
+    this.mapService.createMap();
+    this.mapService.openLocation('Netherlands');
   }
 
   displayForecastForDay(): void {
-    this.loadWeatherForecastForDay(this.date).subscribe(({data}: any) => {
+    this.weatherService.loadWeatherForecastForDay(this.date).subscribe(({data}: any) => {
       this.placeMarkers(data.stations);
     });
   }
@@ -166,8 +81,8 @@ export class MapComponent implements OnInit {
     this.searchState = 'invisible';
   }
 
-  showCityWeather(city): void {
-    this.loadWeatherForecastForCity(city || this.city).subscribe(({data}: any) => {
+  showCityWeather(city: number): void {
+    this.weatherService.loadWeatherForecastForCity(city || this.city).subscribe(({data}: any) => {
       let dialogRef = this.dialog.open(WeatherInCityDialog, { width: '650px' });
       dialogRef.componentInstance.city = data.stations[0].place_name;
       dialogRef.componentInstance.data = data.stations[0].forecast.slice(0, 5);
@@ -176,37 +91,20 @@ export class MapComponent implements OnInit {
   }
 
   placeMarkers(stations: any[]): void {
-    if (this.markerGroup) {
-      this.map.removeLayer(this.markerGroup);
-    }
-
-    let icon = L.icon({
-      iconUrl: 'assets/marker-icon.png',
-      shadowUrl: 'assets/marker-shadow.png',
-
-      iconSize: [25, 41],
-      shadowSize: [41, 41],
-      shadowAnchor: [15, 20]
-    })
-
-    this.markerGroup = L.markerClusterGroup();
+    this.mapService.clearMarkerGroup();
 
     stations.forEach(station => {
       if (Number(station.forecast[0].temperature_max)) {
-        let m = L.marker(
-          L.latLng(station.latitude, station.longitude), { icon: icon })
-          .bindTooltip(this.buildTooltip(station.place_name, station.forecast[0]), {
-            interactive: false,
-            direction: 'right',
-            permanent: true,
-            offset: [15, 0]
-          });
-        m.on('click', (e: any) => this.showCityWeather(station.station_id));
-        this.markerGroup.addLayer(m);
+        this.mapService.addMarker(
+          L.latLng(station.latitude, station.longitude),
+          this.buildTooltip(station.place_name, station.forecast[0]),
+          station.station_id,
+          this.showCityWeather
+        );
       }
     });
 
-    this.map.addLayer(this.markerGroup);
+    this.mapService.placeMarkerGroup();
   }
 
   buildTooltip(title: string, forecast: any): string {
