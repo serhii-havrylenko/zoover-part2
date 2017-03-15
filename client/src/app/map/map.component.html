@@ -1,19 +1,19 @@
 <md-toolbar color="primary">
   <span>Weather map</span>
-  <md2-datepicker placeholder="Select date" [(ngModel)]="date" [min]="minDate" [max]="maxDate" #dateControl="ngModel" (change)="placeMarkers()"></md2-datepicker>
+  <md2-datepicker placeholder="Select date" [(ngModel)]="date" [min]="minDate" [max]="maxDate" #dateControl="ngModel" (change)="displayForecastForDay()"></md2-datepicker>
 
   <div fxFlex class="search-box">
     <div [@searchState]="searchState">
-      <button md-icon-button (click)="searchClick()">
+      <button md-icon-button (click)="hideSearch()">
         <md-icon>arrow_back</md-icon>
       </button>
 
-      <md2-autocomplete [items]="items" item-text="name" item-value="name" placeholder="Select City" [(ngModel)]="city" #autocompleteControl="ngModel" (change)="showCityWeather($event.value)">
+      <md2-autocomplete [items]="cities" item-text="name" item-value="id" placeholder="Select City" [(ngModel)]="city" #autocompleteControl="ngModel" (change)="showCityWeather($event.value)">
       </md2-autocomplete>
     </div>
   </div>
 
-  <button md-icon-button (click)="searchClick()">
+  <button md-icon-button (click)="showSearch()">
     <md-icon>search</md-icon>
   </button>
 </md-toolbar>

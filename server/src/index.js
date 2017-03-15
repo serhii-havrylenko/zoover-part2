@@ -1,15 +1,20 @@
 import http from 'http';
 import express from 'express';
+import cors from 'cors';
 import graphqlHTTP from 'express-graphql';
 
 import config from './config.json';
 
-import { StarWarsSchema } from './graphql/schema.js';
+import { weatherForecastSchema } from './graphql/schema.js';
 
 let app = express();
 
+app.use(cors({
+  exposedHeaders: config.corsHeaders
+}));
+
 app.use('/graphql', graphqlHTTP({
-  schema: StarWarsSchema,
+  schema: weatherForecastSchema,
   graphiql: true
 }));
 

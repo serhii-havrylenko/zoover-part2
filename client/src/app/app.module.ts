@@ -15,6 +15,19 @@ import { AppComponent } from './app.component';
 import { MapComponent } from './map/map.component';
 import { WeatherInCityDialog } from './weather-in-city/weather-in-city-dialog.component';
 
+import { ApolloClient, createNetworkInterface } from 'apollo-client';
+import { ApolloModule } from 'apollo-angular';
+
+const client = new ApolloClient({
+  networkInterface: createNetworkInterface({
+    uri: 'http://localhost:4000/graphql'
+  }),
+});
+
+export function provideClient(): ApolloClient {
+  return client;
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +42,8 @@ import { WeatherInCityDialog } from './weather-in-city/weather-in-city-dialog.co
     AppRoutingModule,
     CovalentCoreModule.forRoot(),
     ReactiveFormsModule,
-    Md2Module.forRoot()
+    Md2Module.forRoot(),
+    ApolloModule.forRoot(provideClient)
   ],
   providers: [
     MapService,
