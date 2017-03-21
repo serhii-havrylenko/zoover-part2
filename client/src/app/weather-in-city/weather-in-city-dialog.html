@@ -1,45 +1,8 @@
 <div>
-  <h2 md-dialog-title class="dialog-title">Weather in {{city}}</h2>
+  <h2 md-dialog-title class="dialog-title">Dialog title</h2>
 
   <md-dialog-content>
-    <!-- <div fxLayout="column" fxFlex="10%">
-      <div></div>
-      <div><img src="/assets/icons/thermometer-lines.svg"/></div>
-      <div><img src="/assets/icons/thermometer.svg"/></div>
-      <div><img src="/assets/icons/water.svg"/></div>
-      <div><img src="/assets/icons/water.svg"/></div>
-    </div> -->
-
-    <div fxLayout="row" class="weather-row">
-      <div fxFlex="10"></div>
-      <div *ngFor="let day of data" fxFlex="18" class="weather-col">
-        <span>{{day.datetime | date}}</span>
-      </div>
-    </div>
-    <div fxLayout="row" class="weather-row">
-      <div fxFlex="10"><img src="/assets/icons/thermometer-lines.svg"/></div>
-      <div *ngFor="let day of data" fxFlex="18" class="weather-col">
-        <span>{{day.temperature_max}}&deg;C</span>
-      </div>
-    </div>
-    <div fxLayout="row" class="weather-row">
-      <div fxFlex="10"><img src="/assets/icons/thermometer.svg"/></div>
-      <div *ngFor="let day of data" fxFlex="18" class="weather-col">
-        <span>{{day.temperature_min}}&deg;C</span>
-      </div>
-    </div>
-    <div fxLayout="row" class="weather-row">
-      <div fxFlex="10"><img src="/assets/icons/water.svg"/></div>
-      <div *ngFor="let day of data" fxFlex="18" class="weather-col">
-        <span>{{day.precipitation_probability}}%</span>
-      </div>
-    </div>
-    <div fxLayout="row" class="weather-row">
-      <div fxFlex="10"><img src="/assets/icons/water.svg"/></div>
-      <div *ngFor="let day of data" fxFlex="18" class="weather-col">
-        <span>{{day.precipitation_mm}}mm</span>
-      </div>
-    </div>
+    dialog data
   </md-dialog-content>
 
   <md-dialog-actions>

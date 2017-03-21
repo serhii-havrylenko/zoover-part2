@@ -6,14 +6,11 @@ import { HttpModule } from '@angular/http';
 import { CovalentCoreModule } from '@covalent/core';
 import { Md2Module }  from 'md2';
 
-import { MapService } from './services/map.service';
-import { GeocodingService } from './services/geocoding.service';
 import { WeatherService } from './services/weather.service';
 
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { MapComponent } from './map/map.component';
 import { WeatherInCityDialog } from './weather-in-city/weather-in-city-dialog.component';
 
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
@@ -32,7 +29,6 @@ export function provideClient(): ApolloClient {
 @NgModule({
   declarations: [
     AppComponent,
-    MapComponent,
     WeatherInCityDialog
   ],
   entryComponents: [WeatherInCityDialog],
@@ -47,8 +43,6 @@ export function provideClient(): ApolloClient {
     ApolloModule.forRoot(provideClient)
   ],
   providers: [
-    MapService,
-    GeocodingService,
     WeatherService
   ],
   bootstrap: [AppComponent]

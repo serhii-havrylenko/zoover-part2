@@ -12,24 +12,3 @@ $theme: mat-light-theme($primary, $accent, $warn);
 
 @include angular-material-theme($theme);
 @include covalent-theme($theme);
-
-.leaflet-tooltip img {
-  width: 14px;
-  height: 14px;
-}
-.leaflet-tooltip .title {
-  font-size: 12px;
-  text-align: center;
-}
-.leaflet-tooltip {
-  font-size: 10px;
-  text-align: left;
-  vertical-align: text-top;
-}
-.leaflet-tooltip .tooltip-row {
-  display: flex;
-}
-
-td-search-box .mat-input-wrapper{
-  padding-bottom: 0;
-}

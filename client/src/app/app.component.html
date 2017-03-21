@@ -1,1 +1,18 @@
+<md-toolbar color="primary">
+  <span>App</span>
+  <md2-datepicker placeholder="Select date" [(ngModel)]="date" #dateControl="ngModel"></md2-datepicker>
+
+  <div fxFlex class="search-box">
+    <div [@searchState]="searchState">
+      <button md-icon-button (click)="hideSearch()">
+        <md-icon>arrow_back</md-icon>
+      </button>
+    </div>
+  </div>
+
+  <button md-icon-button (click)="showSearch()">
+    <md-icon>search</md-icon>
+  </button>
+</md-toolbar>
+
 <router-outlet></router-outlet>
