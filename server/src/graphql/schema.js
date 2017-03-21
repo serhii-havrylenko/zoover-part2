@@ -10,65 +10,63 @@ import {
   GraphQLFloat
 } from 'graphql';
 
-import { getStations, getWeatherDates, getForecast } from './data.js';
+import { getAccomodations, getAccomodation, getTraveledWith, getReviews } from './data.js';
 
-const forecastType = new GraphQLObjectType({
-  name: 'Forecast',
-  description: 'Weather forecast in specific station and date.',
+const reviewType = new GraphQLObjectType({
+  name: 'Review',
+  description: 'Accomodation review',
   fields: () => ({
-    datetime: {
+    id: {
       type: new GraphQLNonNull(GraphQLString),
-      description: 'The datetime of the forecast.',
+      description: 'The id of the accomodation.',
     },
-    temperature_max: {
-      type: GraphQLString,
-      description: 'Maximum temperature.',
-    },
-    temperature_min: {
-      type: GraphQLString,
-      description: 'Minimum temperature.',
-    },
-    precipitation_probability: {
-      type: GraphQLString,
-      description: 'Precipitation probability.',
-    },
-    precipitation_mm: {
-      type: GraphQLString,
-      description: 'Precipitation millimeters.',
+    traveledWith: {
+      type: new GraphQLNonNull(GraphQLString),
+      dexcription: 'Traveled with'
     }
   })
 });
 
-const stationType = new GraphQLObjectType({
-  name: 'Station',
-  description: 'Weather in specific station',
+const accommodationType = new GraphQLObjectType({
+  name: 'Accomodation',
+  description: 'Accomodation info with statistic and reviews',
   fields: () => ({
-    station_id: {
-      type: new GraphQLNonNull(GraphQLInt),
-      description: 'The id of the station.',
+    id: {
+      type: new GraphQLNonNull(GraphQLString),
+      description: 'The id of the accomodation.',
     },
-    place_name: {
-      type: GraphQLString,
-      description: 'The name of the station.',
-    },
-    latitude: {
-      type: GraphQLFloat,
-      description: 'Latitude of the station.',
-    },
-    longitude: {
-      type: GraphQLFloat,
-      description: 'Longitude of the station.',
-    },
-    forecast: {
-      type: new GraphQLList(forecastType),
+    reviews: {
+      type: new GraphQLObjectType({
+        name: "Page",
+        description: "Page",
+        fields: () => ({
+          totalCount: { type: GraphQLInt },
+          edges: {
+            type: new GraphQLList(reviewType)
+          },
+        })
+      }),
+      description: 'Accomodation review.',
       args: {
-        datetime: {
-          description: 'datetime for filtering.',
-          type: GraphQLString
+        first: {
+          type: GraphQLInt,
+          description: "Limits the number of results returned in the page. Defaults to 10."
+        },
+        offset: {
+          type: GraphQLInt,
+          description: "Offset. Defaults to 0"
         }
       },
-      description: 'Weather forecast for specific station.',
-      resolve: (station, { datetime }) => getForecast(station.station_id, datetime),
+      resolve: (accomodation, { first = 10, offset = 0 }) => {
+        const reviews = getReviews(accomodation.id);
+        const offsetIndex = offset;
+        const edges = reviews.slice(offsetIndex, offsetIndex + first);
+
+        return {
+          totalCount: reviews.length,
+          edges
+        };
+      },
     },
   })
 });
@@ -76,26 +74,28 @@ const stationType = new GraphQLObjectType({
 const queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
-    stations: {
-      type: new GraphQLList(stationType),
+    accomodations: {
+      type: new GraphQLList(GraphQLString),
+      resolve: () => getAccomodations()
+    },
+    accomodation: {
+      type: accommodationType,
       args: {
-        station_id: {
-          description: 'id of the station',
-          type: GraphQLInt
+        id: {
+          description: 'id of the accomodation',
+          type: GraphQLString
         }
       },
-      resolve: (root, { station_id }) => getStations(station_id)
+      resolve: (root, { id }) => getAccomodation(id)
     },
-    dates: {
+    traveledWith: {
       type: new GraphQLList(GraphQLString),
-      resolve: function() {
-        return getWeatherDates();
-      }
+      resolve: () => getTraveledWith()
     },
   })
 });
 
-export const weatherForecastSchema = new GraphQLSchema({
+export const accommodationSchema = new GraphQLSchema({
   query: queryType,
-  types: [stationType, forecastType]
+  types: [accommodationType]
 });

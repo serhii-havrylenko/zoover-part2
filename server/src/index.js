@@ -5,7 +5,7 @@ import graphqlHTTP from 'express-graphql';
 
 import config from './config.json';
 
-import { weatherForecastSchema } from './graphql/schema.js';
+import { accommodationSchema } from './graphql/schema.js';
 
 let app = express();
 
@@ -14,7 +14,7 @@ app.use(cors({
 }));
 
 app.use('/graphql', graphqlHTTP({
-  schema: weatherForecastSchema,
+  schema: accommodationSchema,
   graphiql: true
 }));
 

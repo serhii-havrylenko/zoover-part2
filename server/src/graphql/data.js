@@ -1,54 +1,47 @@
-import Promise from 'promise';
+import reviews from './reviews.json';
 
-import data from './data.json';
+export function getTraveledWith() {
+  let traveledWith = []
 
-export function getWeatherDates() {
-  let dates = []
-
-  data.forEach((station) => {
-    if (dates.indexOf(station.datetime) === -1) {
-      dates.push(station.datetime);
+  reviews.forEach((review) => {
+    if (traveledWith.indexOf(review.traveledWith) === -1) {
+      traveledWith.push(review.traveledWith);
     }
   });
 
-  return dates;
+  return traveledWith.sort();
 }
 
-export function getStations(station_id) {
-  let stations = [];
+export function getAccomodations() {
+  let accomodations = []
 
-  data.forEach((station) => {
-    if (!stations.find((el) => el.station_id === station.station_id) &&
-      (!station_id || (station_id && station.station_id === station_id))
-    ) {
-      stations.push({
-        station_id: station.station_id,
-        place_name: station.place_name,
-        latitude: station.latitude,
-        longitude: station.longitude
+  reviews.forEach((review) => {
+    if (Array.isArray(review.parents)) {
+      review.parents.forEach((parent) => {
+        if (accomodations.indexOf(parent.id) === -1) {
+          accomodations.push(parent.id);
+        }
       });
     }
   });
 
-  return stations;
+  return accomodations.sort();
 }
 
-export function getForecast(station_id, datetime) {
-  let forecast = [];
+export function getAccomodation(id) {
+  let accomodations = []
 
-  data.forEach((station) => {
-    if (station.station_id === station_id &&
-      (!datetime || (datetime && new Date(station.datetime).getTime() === new Date(datetime).getTime()))
-    ) {
-      forecast.push({
-        datetime: station.datetime,
-        temperature_max: station.temperature_max,
-        temperature_min: station.temperature_min,
-        precipitation_probability: station.precipitation_probability,
-        precipitation_mm: station.precipitation_mm
-      });
+  return { id };
+}
+
+export function getReviews(accomodation_id) {
+  let acc_reviews = []
+
+  reviews.forEach((review) => {
+    if (review.parents.find((el) => el.id === accomodation_id)) {
+      acc_reviews.push(review);
     }
   });
 
-  return forecast;
+  return acc_reviews;
 }
