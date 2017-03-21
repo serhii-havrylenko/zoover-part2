@@ -10,7 +10,7 @@ import {
   GraphQLFloat
 } from 'graphql';
 
-import { getAccomodations, getAccomodation, getTraveledWith, getReviews } from './data.js';
+import { getAccomodations, getAccomodation, getTraveledWith, getReviews, getAccomodationRanking } from './data.js';
 
 const reviewType = new GraphQLObjectType({
   name: 'Review',
@@ -34,6 +34,125 @@ const accommodationType = new GraphQLObjectType({
     id: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'The id of the accomodation.',
+    },
+    ranking: {
+      type: new GraphQLObjectType({
+        name: 'Accomodation_ranking',
+        description: 'Accomodation ranking calculated by reviews',
+        fields: () => ({
+          general: {
+            type: new GraphQLNonNull(GraphQLFloat),
+            description: 'General accomodation ranking'
+          },
+          aspects: {
+            type: new GraphQLObjectType({
+              name: 'Aspects_ranking',
+              description: 'Aspects ranking calculated by reviews',
+              fields: () => ({
+                location: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for location',
+                },
+                service: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for service',
+                },
+                priceQuality: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for priceQuality',
+                },
+                food: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for food',
+                },
+                room: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for room',
+                },
+                childFriendly: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for childFriendly',
+                },
+                interior: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for interior',
+                },
+                size: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for size',
+                },
+                activities: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for activities',
+                },
+                restaurants: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for restaurants',
+                },
+                sanitaryState: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for sanitaryState',
+                },
+                accessibility: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for accessibility',
+                },
+                nightlife: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for nightlife',
+                },
+                culture: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for culture',
+                },
+                surrounding: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for surrounding',
+                },
+                atmosphere: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for atmosphere',
+                },
+                noviceSkiArea: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for noviceSkiArea',
+                },
+                advancedSkiArea: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for advancedSkiArea',
+                },
+                apresSki: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for apresSki',
+                },
+                beach: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for beach',
+                },
+                entertainment: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for entertainment',
+                },
+                environmental: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for environmental',
+                },
+                pool: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for pool',
+                },
+                terrace: {
+                  type: GraphQLFloat,
+                  description: 'Ranking for terrace',
+                }
+              })
+            }),
+            description: 'Aspects ranking calculated by reviews',
+            resolve: (ranking) => ranking.aspects
+          }
+        })
+      }),
+      resolve: (accomodation) => getAccomodationRanking(accomodation.id)
     },
     reviews: {
       type: new GraphQLObjectType({
