@@ -5,7 +5,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterObjPipe implements PipeTransform {
 
-  transform(value: any, args?: any): any {
+  transform(value: any): any {
+    if (!value || !Array.isArray(value)) {
+      return value;
+    }
+
     return value.filter((el) => !el.match(/^__/));
   }
 

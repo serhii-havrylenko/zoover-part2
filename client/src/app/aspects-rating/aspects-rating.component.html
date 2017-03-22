@@ -1,0 +1,11 @@
+<div class="aspects-rating">
+  <md-chip-list>
+    <md-chip *ngFor="let aspect of rating | keyval | filterObj | slice:0:8; let i = index" [color]="i % 3 === 1 ? 'primary' : i % 3 === 2 ? 'accent' : ''" [selected]="i % 3 !== 0">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
+  </md-chip-list>
+  <md-chip-list>
+    <md-chip *ngFor="let aspect of rating | keyval | filterObj | slice:8:16; let i = index" [color]="i % 3 === 0 ? 'primary' : i % 3 === 1 ? 'accent' : ''" [selected]="i % 3 < 2">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
+  </md-chip-list>
+  <md-chip-list>
+    <md-chip *ngFor="let aspect of rating | keyval | filterObj | slice:16:24; let i = index" [color]="i % 3 === 0 ? 'accent' : i % 3 === 2 ? 'primary' : ''" [selected]="i % 3 === 0 || i % 3 === 2">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
+  </md-chip-list>
+</div>

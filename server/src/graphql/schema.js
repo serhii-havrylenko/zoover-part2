@@ -42,7 +42,7 @@ const reviewType = new GraphQLObjectType({
     text: {
       type: GraphQLString,
       description: 'Review text',
-      resolve: (review) => acc.getReviewTitle(review)
+      resolve: (review) => acc.getReviewText(review)
     },
     user: {
       type: GraphQLString,
@@ -51,6 +51,126 @@ const reviewType = new GraphQLObjectType({
     locale: {
       type: GraphQLString,
       description: 'Review locale'
+    },
+    ranking: {
+      type: new GraphQLObjectType({
+        name: 'ReviewRanking',
+        description: 'Review ranking',
+        fields: () => ({
+          general: {
+            type: new GraphQLNonNull(GraphQLFloat),
+            description: 'General ranking'
+          },
+          aspects: {
+            type: aspectsRankingType,
+            description: 'Aspects ranking'
+          }
+        })
+      }),
+      description: 'Review ranking'
+    }
+  })
+});
+
+const aspectsRankingType = new GraphQLObjectType({
+  name: 'AspectsRanking',
+  description: 'Aspects ranking calculated by reviews',
+  fields: () => ({
+    location: {
+      type: GraphQLFloat,
+      description: 'Ranking for location',
+    },
+    service: {
+      type: GraphQLFloat,
+      description: 'Ranking for service',
+    },
+    priceQuality: {
+      type: GraphQLFloat,
+      description: 'Ranking for priceQuality',
+    },
+    food: {
+      type: GraphQLFloat,
+      description: 'Ranking for food',
+    },
+    room: {
+      type: GraphQLFloat,
+      description: 'Ranking for room',
+    },
+    childFriendly: {
+      type: GraphQLFloat,
+      description: 'Ranking for childFriendly',
+    },
+    interior: {
+      type: GraphQLFloat,
+      description: 'Ranking for interior',
+    },
+    size: {
+      type: GraphQLFloat,
+      description: 'Ranking for size',
+    },
+    activities: {
+      type: GraphQLFloat,
+      description: 'Ranking for activities',
+    },
+    restaurants: {
+      type: GraphQLFloat,
+      description: 'Ranking for restaurants',
+    },
+    sanitaryState: {
+      type: GraphQLFloat,
+      description: 'Ranking for sanitaryState',
+    },
+    accessibility: {
+      type: GraphQLFloat,
+      description: 'Ranking for accessibility',
+    },
+    nightlife: {
+      type: GraphQLFloat,
+      description: 'Ranking for nightlife',
+    },
+    culture: {
+      type: GraphQLFloat,
+      description: 'Ranking for culture',
+    },
+    surrounding: {
+      type: GraphQLFloat,
+      description: 'Ranking for surrounding',
+    },
+    atmosphere: {
+      type: GraphQLFloat,
+      description: 'Ranking for atmosphere',
+    },
+    noviceSkiArea: {
+      type: GraphQLFloat,
+      description: 'Ranking for noviceSkiArea',
+    },
+    advancedSkiArea: {
+      type: GraphQLFloat,
+      description: 'Ranking for advancedSkiArea',
+    },
+    apresSki: {
+      type: GraphQLFloat,
+      description: 'Ranking for apresSki',
+    },
+    beach: {
+      type: GraphQLFloat,
+      description: 'Ranking for beach',
+    },
+    entertainment: {
+      type: GraphQLFloat,
+      description: 'Ranking for entertainment',
+    },
+    environmental: {
+      type: GraphQLFloat,
+      description: 'Ranking for environmental',
+    },
+    pool: {
+      type: GraphQLFloat,
+      description: 'Ranking for pool',
+    },
+    terrace: {
+      type: GraphQLFloat,
+      description: 'Ranking for terrace',
     }
   })
 });
@@ -73,108 +193,7 @@ const accommodationType = new GraphQLObjectType({
             description: 'General accommodation ranking'
           },
           aspects: {
-            type: new GraphQLObjectType({
-              name: 'AspectsRanking',
-              description: 'Aspects ranking calculated by reviews',
-              fields: () => ({
-                location: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for location',
-                },
-                service: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for service',
-                },
-                priceQuality: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for priceQuality',
-                },
-                food: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for food',
-                },
-                room: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for room',
-                },
-                childFriendly: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for childFriendly',
-                },
-                interior: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for interior',
-                },
-                size: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for size',
-                },
-                activities: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for activities',
-                },
-                restaurants: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for restaurants',
-                },
-                sanitaryState: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for sanitaryState',
-                },
-                accessibility: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for accessibility',
-                },
-                nightlife: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for nightlife',
-                },
-                culture: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for culture',
-                },
-                surrounding: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for surrounding',
-                },
-                atmosphere: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for atmosphere',
-                },
-                noviceSkiArea: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for noviceSkiArea',
-                },
-                advancedSkiArea: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for advancedSkiArea',
-                },
-                apresSki: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for apresSki',
-                },
-                beach: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for beach',
-                },
-                entertainment: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for entertainment',
-                },
-                environmental: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for environmental',
-                },
-                pool: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for pool',
-                },
-                terrace: {
-                  type: GraphQLFloat,
-                  description: 'Ranking for terrace',
-                }
-              })
-            }),
+            type: aspectsRankingType,
             description: 'Aspects ranking calculated by reviews',
             resolve: (ranking) => ranking.aspects
           }

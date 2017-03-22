@@ -3,7 +3,7 @@
     <div fxFlex></div>
     <div fxFlex="25">
       <span>Traveled with: </span>
-      <md-select placeholder="Traveled with" [(ngModel)]="traveledWithFilter">
+      <md-select placeholder="Traveled with" [(ngModel)]="traveledWithFilter" (change)="filterReviews()">
         <md-option [value]="">All</md-option>
         <md-option *ngFor="let tr of traveledWith" [value]="tr">
           {{ tr }}
@@ -13,7 +13,7 @@
 
     <div fxFlex="25">
       <span>Sort reviews by:</span>
-      <md-select placeholder="Sort by" [(ngModel)]="sortBy">
+      <md-select placeholder="Sort by" [(ngModel)]="sortBy" (change)="filterReviews()">
         <md-option [value]="'travelDate'">Traveled date</md-option>
         <md-option [value]="'entryDate'">Review date</md-option>
       </md-select>
@@ -22,49 +22,58 @@
   </div>
 
   <td-layout-card-over cardTitle="Accommodataion review" cardWidth="90">
-      <md-card>
-        <md-card-title>Rating</md-card-title>
-        <md-card-subtitle>General</md-card-subtitle>
+    <md-card>
+      <md-card-title>Rating</md-card-title>
+      <md-card-subtitle>General</md-card-subtitle>
+      <md-card-content>
+        <md-chip-list>
+          <md-chip color="primary" selected>{{generalRating}}</md-chip>
+        </md-chip-list>
+      </md-card-content>
+      <md-divider></md-divider>
+      <md-card-subtitle>Aspects</md-card-subtitle>
+      <md-card-content>
+        <aspects-rating [ranking]="aspectsRating"></aspects-rating>
+      </md-card-content>
+    </md-card>
+
+    <section *ngFor="let reviewChunk of reviews | chunk:3" fxLayoutGap="10px" fxLayoutAlign="space-around start" fxLayout="row" [@reviews]>
+      <md-card fxFlex="33" *ngFor="let review of reviewChunk">
+        <md-card-title>{{review.user}}</md-card-title>
+        <md-card-subtitle *ngIf="review.title">
+          <span>{{review.title}}</span>
+        </md-card-subtitle>
+        <md-card-subtitle>
+          <span>Traveled with: {{review.traveledWith}}</span>
+        </md-card-subtitle>
+        <md-divider></md-divider>
         <md-card-content>
-          <md-chip-list>
-            <md-chip color="primary" selected>{{generalRating}}</md-chip>
-          </md-chip-list>
+          <p>{{review.text}}</p>
+        </md-card-content>
+        <md-card-subtitle fxLayout="row">
+          <span>Review date: {{review.entryDate | date}}</span>
+          <span fxFlex></span>
+          <span>Traveled date: {{review.travelDate | date}}</span>
+        </md-card-subtitle>
+        <md-divider></md-divider>
+        <md-card-subtitle *ngIf="review.ranking">General
+            <md-chip color="primary" selected>{{review.ranking.general}}</md-chip>
+        </md-card-subtitle>
+        <md-card-subtitle *ngIf="review.ranking">Aspects</md-card-subtitle>
+        <md-card-content *ngIf="review.ranking">
+          <aspects-rating [ranking]="review.ranking.aspects"></aspects-rating>
         </md-card-content>
         <md-divider></md-divider>
-        <md-card-subtitle>Aspects</md-card-subtitle>
-        <md-card-content>
-          <div  *ngIf="aspectsRating" class="aspects-rating">
-            <md-chip-list>
-              <md-chip *ngFor="let aspect of aspectsRating | keyval | filterObj | slice:0:8; let i = index" [color]="i % 3 === 1 ? 'primary' : i % 3 === 2 ? 'accent' : ''" [selected]="i % 3 !== 0">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
-            </md-chip-list>
-            <md-chip-list >
-              <md-chip *ngFor="let aspect of aspectsRating | keyval | filterObj | slice:8:16; let i = index" [color]="i % 3 === 0 ? 'primary' : i % 3 === 1 ? 'accent' : ''" [selected]="i % 3 < 2">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
-            </md-chip-list>
-            <md-chip-list >
-              <md-chip *ngFor="let aspect of aspectsRating | keyval | filterObj | slice:16:24; let i = index" [color]="i % 3 === 0 ? 'accent' : i % 3 === 2 ? 'primary' : ''" [selected]="i % 3 === 0 || i % 3 === 2">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
-            </md-chip-list>
-          </div>
-        </md-card-content>
       </md-card>
-
-    <section fxLayout="row">
-        <md-card fxFlex="20">
-          <md-card-title>Standard Card</md-card-title>
-          <md-card-subtitle>Subtitle</md-card-subtitle>
-          <md-divider></md-divider>
-          <md-card-content>
-            <p>Standard card with content</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad</p>
-          </md-card-content>
-          <md-divider></md-divider>
-          <md-card-actions>
-            <button md-button color="accent" class="text-upper">Action</button>
-            <button md-button class="text-upper">Cancel</button>
-          </md-card-actions>
-        </md-card>
     </section>
 
+    <section fxLayout="row">
+      <span flex></span>
+      <button md-raised-button color="accent" (click)="loadMoreReviews()">
+        <md-icon>expand_more</md-icon>
+        Load more reviews
+      </button>
+    </section>
     <router-outlet></router-outlet>
   </td-layout-card-over>
 </td-layout-nav>

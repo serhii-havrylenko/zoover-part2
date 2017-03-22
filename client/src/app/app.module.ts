@@ -14,8 +14,10 @@ import { AppComponent } from './app.component';
 
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import { ApolloModule } from 'apollo-angular';
-import { KeyvalPipe } from './keyval.pipe';
-import { FilterObjPipe } from './filter-obj.pipe';
+import { KeyvalPipe } from './pipes/keyval.pipe';
+import { FilterObjPipe } from './pipes/filter-obj.pipe';
+import { ChunkPipe } from './pipes/chunk.pipe';
+import { AspectsRatingComponent } from './aspects-rating/aspects-rating.component';
 
 const client = new ApolloClient({
   networkInterface: createNetworkInterface({
@@ -31,7 +33,9 @@ export function provideClient(): ApolloClient {
   declarations: [
     AppComponent,
     KeyvalPipe,
-    FilterObjPipe
+    FilterObjPipe,
+    ChunkPipe,
+    AspectsRatingComponent
   ],
   imports: [
     BrowserModule,

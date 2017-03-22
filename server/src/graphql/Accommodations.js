@@ -93,6 +93,11 @@ export class Accommodations {
 
     reviews.forEach((review) => {
       if (review.parents.find((el) => el.id === accommodation_id)) {
+        review.ranking = {
+          general: review.ratings.general.general,
+          aspects: review.ratings.aspects
+        };
+
         accReviews.push(review);
       }
     });
