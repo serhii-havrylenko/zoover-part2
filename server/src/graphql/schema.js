@@ -10,7 +10,9 @@ import {
   GraphQLFloat
 } from 'graphql';
 
-import { getAccomodations, getAccomodation, getTraveledWith, getReviews, getAccomodationRanking, getReviewTitle, getReviewText } from './data.js';
+import { Accomodations } from './Accomodations.js';
+
+const acc = new Accomodations();
 
 const reviewType = new GraphQLObjectType({
   name: 'Review',
@@ -35,12 +37,12 @@ const reviewType = new GraphQLObjectType({
     title: {
       type: GraphQLString,
       description: 'Review title',
-      resolve: (review) => getReviewTitle(review)
+      resolve: (review) => acc.getReviewTitle(review)
     },
     text: {
       type: GraphQLString,
       description: 'Review text',
-      resolve: (review) => getReviewTitle(review)
+      resolve: (review) => acc.getReviewTitle(review)
     },
     user: {
       type: GraphQLString,
@@ -178,7 +180,7 @@ const accommodationType = new GraphQLObjectType({
           }
         })
       }),
-      resolve: (accomodation) => getAccomodationRanking(accomodation.id)
+      resolve: (accomodation) => acc.getAccomodationRanking(accomodation.id)
     },
     reviews: {
       type: new GraphQLObjectType({
@@ -203,7 +205,7 @@ const accommodationType = new GraphQLObjectType({
         }
       },
       resolve: (accomodation, { first = 10, offset = 0 }) => {
-        const reviews = getReviews(accomodation.id);
+        const reviews = acc.getReviews(accomodation.id);
         const offsetIndex = offset;
         const edges = reviews.slice(offsetIndex, offsetIndex + first);
 
@@ -221,7 +223,7 @@ const queryType = new GraphQLObjectType({
   fields: () => ({
     accomodations: {
       type: new GraphQLList(GraphQLString),
-      resolve: () => getAccomodations()
+      resolve: () => acc.getAccomodations()
     },
     accomodation: {
       type: accommodationType,
@@ -231,11 +233,11 @@ const queryType = new GraphQLObjectType({
           type: GraphQLString
         }
       },
-      resolve: (root, { id }) => getAccomodation(id)
+      resolve: (root, { id }) => acc.getAccomodation(id)
     },
     traveledWith: {
       type: new GraphQLList(GraphQLString),
-      resolve: () => getTraveledWith()
+      resolve: () => acc.getTraveledWith()
     },
   })
 });
