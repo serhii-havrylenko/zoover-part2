@@ -1,6 +1,6 @@
 import reviews from './reviews.json';
 
-export class Accomodations {
+export class Accommodations {
   // compute all rankings once on the data import stage, no need to do it for each request
   constructor() {
     this.computedRanking = {};
@@ -9,9 +9,9 @@ export class Accomodations {
       const now = new Date();
       const fiveYearsAgoDate = new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
       const fiveYearsAgoTimestamp = new Date(now.getFullYear() - 5, now.getMonth(), now.getDate()).getTime();
-      const accomodations = this.getAccomodations();
+      const accommodations = this.getAccommodations();
 
-      accomodations.forEach((id) => {
+      accommodations.forEach((id) => {
         const accReviews = this.getReviews(id);
         const numberOfReviews = accReviews.length
         let generalRating = 0;
@@ -66,33 +66,33 @@ export class Accomodations {
     return traveledWith.sort();
   }
 
-  getAccomodations() {
-    let accomodations = []
+  getAccommodations() {
+    let accommodations = []
 
     reviews.forEach((review) => {
       if (Array.isArray(review.parents)) {
         review.parents.forEach((parent) => {
-          if (accomodations.indexOf(parent.id) === -1) {
-            accomodations.push(parent.id);
+          if (accommodations.indexOf(parent.id) === -1) {
+            accommodations.push(parent.id);
           }
         });
       }
     });
 
-    return accomodations.sort();
+    return accommodations.sort();
   }
 
-  getAccomodation(id) {
-    let accomodations = []
+  getAccommodation(id) {
+    let accommodations = []
 
     return { id };
   }
 
-  getReviews(accomodation_id) {
+  getReviews(accommodation_id) {
     let accReviews = []
 
     reviews.forEach((review) => {
-      if (review.parents.find((el) => el.id === accomodation_id)) {
+      if (review.parents.find((el) => el.id === accommodation_id)) {
         accReviews.push(review);
       }
     });
@@ -100,7 +100,7 @@ export class Accomodations {
     return accReviews;
   }
 
-  getAccomodationRanking(id) {
+  getAccommodationRanking(id) {
     return this.computedRanking[id];
   }
 

@@ -10,17 +10,17 @@ import {
   GraphQLFloat
 } from 'graphql';
 
-import { Accomodations } from './Accomodations.js';
+import { Accommodations } from './Accommodations.js';
 
-const acc = new Accomodations();
+const acc = new Accommodations();
 
 const reviewType = new GraphQLObjectType({
   name: 'Review',
-  description: 'Accomodation review',
+  description: 'Accommodation review',
   fields: () => ({
     id: {
       type: new GraphQLNonNull(GraphQLString),
-      description: 'The id of the accomodation.',
+      description: 'The id of the accommodation.',
     },
     traveledWith: {
       type: new GraphQLNonNull(GraphQLString),
@@ -56,25 +56,25 @@ const reviewType = new GraphQLObjectType({
 });
 
 const accommodationType = new GraphQLObjectType({
-  name: 'Accomodation',
-  description: 'Accomodation info with statistic and reviews',
+  name: 'Accommodation',
+  description: 'Accommodation info with statistic and reviews',
   fields: () => ({
     id: {
       type: new GraphQLNonNull(GraphQLString),
-      description: 'The id of the accomodation.',
+      description: 'The id of the accommodation.',
     },
     ranking: {
       type: new GraphQLObjectType({
-        name: 'Accomodation_ranking',
-        description: 'Accomodation ranking calculated by reviews',
+        name: 'AccommodationRanking',
+        description: 'Accommodation ranking calculated by reviews',
         fields: () => ({
           general: {
             type: new GraphQLNonNull(GraphQLFloat),
-            description: 'General accomodation ranking'
+            description: 'General accommodation ranking'
           },
           aspects: {
             type: new GraphQLObjectType({
-              name: 'Aspects_ranking',
+              name: 'AspectsRanking',
               description: 'Aspects ranking calculated by reviews',
               fields: () => ({
                 location: {
@@ -180,7 +180,7 @@ const accommodationType = new GraphQLObjectType({
           }
         })
       }),
-      resolve: (accomodation) => acc.getAccomodationRanking(accomodation.id)
+      resolve: (accommodation) => acc.getAccommodationRanking(accommodation.id)
     },
     reviews: {
       type: new GraphQLObjectType({
@@ -193,7 +193,7 @@ const accommodationType = new GraphQLObjectType({
           },
         })
       }),
-      description: 'Accomodation review.',
+      description: 'Accommodation review.',
       args: {
         first: {
           type: GraphQLInt,
@@ -204,8 +204,8 @@ const accommodationType = new GraphQLObjectType({
           description: "Offset. Defaults to 0"
         }
       },
-      resolve: (accomodation, { first = 10, offset = 0 }) => {
-        const reviews = acc.getReviews(accomodation.id);
+      resolve: (accommodation, { first = 10, offset = 0 }) => {
+        const reviews = acc.getReviews(accommodation.id);
         const offsetIndex = offset;
         const edges = reviews.slice(offsetIndex, offsetIndex + first);
 
@@ -221,19 +221,19 @@ const accommodationType = new GraphQLObjectType({
 const queryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
-    accomodations: {
+    accommodations: {
       type: new GraphQLList(GraphQLString),
-      resolve: () => acc.getAccomodations()
+      resolve: () => acc.getAccommodations()
     },
-    accomodation: {
+    accommodation: {
       type: accommodationType,
       args: {
         id: {
-          description: 'id of the accomodation',
+          description: 'id of the accommodation',
           type: GraphQLString
         }
       },
-      resolve: (root, { id }) => acc.getAccomodation(id)
+      resolve: (root, { id }) => acc.getAccommodation(id)
     },
     traveledWith: {
       type: new GraphQLList(GraphQLString),
