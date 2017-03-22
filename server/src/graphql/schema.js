@@ -184,8 +184,8 @@ const accommodationType = new GraphQLObjectType({
     },
     reviews: {
       type: new GraphQLObjectType({
-        name: "Page",
-        description: "Page",
+        name: 'Page',
+        description: 'Page',
         fields: () => ({
           totalCount: { type: GraphQLInt },
           edges: {
@@ -197,17 +197,30 @@ const accommodationType = new GraphQLObjectType({
       args: {
         first: {
           type: GraphQLInt,
-          description: "Limits the number of results returned in the page. Defaults to 10."
+          description: 'Limits the number of results returned in the page. Defaults to 10.'
         },
         offset: {
           type: GraphQLInt,
-          description: "Offset. Defaults to 0"
+          description: 'Offset. Defaults to 0'
+        },
+        sortBy: {
+          type: GraphQLString,
+          description: 'Sort by field'
+        },
+        traveledWith: {
+          type: GraphQLString,
+          description: 'Filter by traveled with value'
         }
       },
-      resolve: (accommodation, { first = 10, offset = 0 }) => {
-        const reviews = acc.getReviews(accommodation.id);
+      resolve: (accommodation, { first = 10, offset = 0, sortBy = 'travelDate', traveledWith }) => {
+        let reviews = acc.getReviews(accommodation.id);
+        if (traveledWith) {
+          reviews = reviews.filter((review) => review.traveledWith.toLowerCase() === traveledWith.toLowerCase());
+        }
+
         const offsetIndex = offset;
-        const edges = reviews.slice(offsetIndex, offsetIndex + first);
+        const edges = reviews.slice(offsetIndex, offsetIndex + first)
+          .sort((a, b) => a[sortBy] - b[sortBy]);
 
         return {
           totalCount: reviews.length,

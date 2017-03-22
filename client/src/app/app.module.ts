@@ -14,6 +14,8 @@ import { AppComponent } from './app.component';
 
 import { ApolloClient, createNetworkInterface } from 'apollo-client';
 import { ApolloModule } from 'apollo-angular';
+import { KeyvalPipe } from './keyval.pipe';
+import { FilterObjPipe } from './filter-obj.pipe';
 
 const client = new ApolloClient({
   networkInterface: createNetworkInterface({
@@ -27,7 +29,9 @@ export function provideClient(): ApolloClient {
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    KeyvalPipe,
+    FilterObjPipe
   ],
   imports: [
     BrowserModule,

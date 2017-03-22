@@ -58,8 +58,8 @@ export class Accommodations {
     let traveledWith = []
 
     reviews.forEach((review) => {
-      if (traveledWith.indexOf(review.traveledWith) === -1) {
-        traveledWith.push(review.traveledWith);
+      if (traveledWith.indexOf(review.traveledWith.toLowerCase()) === -1) {
+        traveledWith.push(review.traveledWith.toLowerCase());
       }
     });
 

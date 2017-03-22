@@ -1,40 +1,65 @@
-import { Component, OnInit, trigger, state, style, transition, animate } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { AccommodationsService } from './services/accommodations.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-  animations: [trigger(
-    'searchState',
-    [
-      state('invisible', style({
-        visibility: 'hidden',
-        opacity: 0,
-      })),
-      state('visible', style({
-        visibility: 'visible',
-        opacity: 1
-      })),
-      transition('invisible => visible', animate('.7s ease-in')),
-      transition('visible => invisible', animate('.7s ease-out'))
-    ])],
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  private searchState: string = 'invisible';
-  private city: number;
+  private traveledWith: string[] = [];
+  private traveledWithFilter: string;
+  private accommodationID: string;
+  private sortBy: string = 'travelDate';
+  private generalRating: string;
+  private aspectsRating: any;
+  private aspectLables: any = {
+    location: 'Location',
+    service: 'Service',
+    priceQuality: 'Price quality',
+    food: 'Food',
+    room: 'Room',
+    childFriendly: 'Child friendly',
+    interior: 'Interior',
+    size: 'Size',
+    activities: 'Activities',
+    restaurants: 'Restaurants',
+    sanitaryState: 'Sanitary state',
+    accessibility: 'Accessibility',
+    nightlife: 'Nightlife',
+    culture: 'Culture',
+    surrounding: 'Surrounding',
+    atmosphere: 'Atmosphere',
+    noviceSkiArea: 'Novice ski Area',
+    advancedSkiArea: 'Advanced ski area',
+    apresSki: 'Apres ski',
+    beach: 'Beach',
+    entertainment: 'Entertainment',
+    environmental: 'Environmental',
+    pool: 'Pool',
+    terrace: 'Terrace'
+  };
 
-  constructor() { }
+  constructor(private accommodationsService: AccommodationsService) { }
 
   ngOnInit() {
+    this.accommodationsService.getDatesAndStations().subscribe(
+      ({data}: any) => {
+        data.traveledWith.forEach((tr) => this.traveledWith.push(tr.replace(/\b\w/g, l => l.toUpperCase())));
+        this.accommodationID = data.accommodations[0];
 
+        this.accommodationsService.getAccommodationRanking(this.accommodationID).subscribe(
+          ({data}: any) => {
+            this.generalRating = data.accommodation.ranking.general;
+            this.aspectsRating = data.accommodation.ranking.aspects;
+          }
+        );
+      }
+    );
   }
 
-  showSearch() {
-    this.searchState = 'visible';
-  }
-
-  hideSearch() {
-    this.city = null;
-    this.searchState = 'invisible';
+  getRatingByAspect(aspect: string) {
+    return Math.floor(this.aspectsRating[aspect] * 100) / 100;
   }
 }

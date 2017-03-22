@@ -1,18 +1,70 @@
-<md-toolbar color="primary">
-  <span>App</span>
-  <md2-datepicker placeholder="Select date" [(ngModel)]="date" #dateControl="ngModel"></md2-datepicker>
-
-  <div fxFlex class="search-box">
-    <div [@searchState]="searchState">
-      <button md-icon-button (click)="hideSearch()">
-        <md-icon>arrow_back</md-icon>
-      </button>
+<td-layout-nav toolbarTitle="Reviws" icon="star_rate">
+  <div td-toolbar-content layout="row" layout-align="start center" flex>
+    <div fxFlex></div>
+    <div fxFlex="25">
+      <span>Traveled with: </span>
+      <md-select placeholder="Traveled with" [(ngModel)]="traveledWithFilter">
+        <md-option [value]="">All</md-option>
+        <md-option *ngFor="let tr of traveledWith" [value]="tr">
+          {{ tr }}
+        </md-option>
+      </md-select>
     </div>
+
+    <div fxFlex="25">
+      <span>Sort reviews by:</span>
+      <md-select placeholder="Sort by" [(ngModel)]="sortBy">
+        <md-option [value]="'travelDate'">Traveled date</md-option>
+        <md-option [value]="'entryDate'">Review date</md-option>
+      </md-select>
+    </div>
+    <div fxFlex></div>
   </div>
 
-  <button md-icon-button (click)="showSearch()">
-    <md-icon>search</md-icon>
-  </button>
-</md-toolbar>
+  <td-layout-card-over cardTitle="Accommodataion review" cardWidth="90">
+      <md-card>
+        <md-card-title>Rating</md-card-title>
+        <md-card-subtitle>General</md-card-subtitle>
+        <md-card-content>
+          <md-chip-list>
+            <md-chip color="primary" selected>{{generalRating}}</md-chip>
+          </md-chip-list>
+        </md-card-content>
+        <md-divider></md-divider>
+        <md-card-subtitle>Aspects</md-card-subtitle>
+        <md-card-content>
+          <div  *ngIf="aspectsRating" class="aspects-rating">
+            <md-chip-list>
+              <md-chip *ngFor="let aspect of aspectsRating | keyval | filterObj | slice:0:8; let i = index" [color]="i % 3 === 1 ? 'primary' : i % 3 === 2 ? 'accent' : ''" [selected]="i % 3 !== 0">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
+            </md-chip-list>
+            <md-chip-list >
+              <md-chip *ngFor="let aspect of aspectsRating | keyval | filterObj | slice:8:16; let i = index" [color]="i % 3 === 0 ? 'primary' : i % 3 === 1 ? 'accent' : ''" [selected]="i % 3 < 2">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
+            </md-chip-list>
+            <md-chip-list >
+              <md-chip *ngFor="let aspect of aspectsRating | keyval | filterObj | slice:16:24; let i = index" [color]="i % 3 === 0 ? 'accent' : i % 3 === 2 ? 'primary' : ''" [selected]="i % 3 === 0 || i % 3 === 2">{{aspectLables[aspect]}}: <b>{{getRatingByAspect(aspect)}}</b></md-chip>
+            </md-chip-list>
+          </div>
+        </md-card-content>
+      </md-card>
 
-<router-outlet></router-outlet>
+    <section fxLayout="row">
+        <md-card fxFlex="20">
+          <md-card-title>Standard Card</md-card-title>
+          <md-card-subtitle>Subtitle</md-card-subtitle>
+          <md-divider></md-divider>
+          <md-card-content>
+            <p>Standard card with content</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad</p>
+          </md-card-content>
+          <md-divider></md-divider>
+          <md-card-actions>
+            <button md-button color="accent" class="text-upper">Action</button>
+            <button md-button class="text-upper">Cancel</button>
+          </md-card-actions>
+        </md-card>
+    </section>
+
+    <router-outlet></router-outlet>
+  </td-layout-card-over>
+</td-layout-nav>
