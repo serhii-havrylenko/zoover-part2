@@ -97,3 +97,11 @@ export function getReviews(accomodation_id) {
 export function getAccomodationRanking(id) {
   return computedRanking[id];
 }
+
+export function getReviewTitle(review) {
+  return review.titles[review.locale];
+}
+
+export function getReviewText(review) {
+  return review.texts[review.locale];
+}

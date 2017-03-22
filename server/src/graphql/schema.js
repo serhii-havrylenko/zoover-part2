@@ -10,7 +10,7 @@ import {
   GraphQLFloat
 } from 'graphql';
 
-import { getAccomodations, getAccomodation, getTraveledWith, getReviews, getAccomodationRanking } from './data.js';
+import { getAccomodations, getAccomodation, getTraveledWith, getReviews, getAccomodationRanking, getReviewTitle, getReviewText } from './data.js';
 
 const reviewType = new GraphQLObjectType({
   name: 'Review',
@@ -23,6 +23,32 @@ const reviewType = new GraphQLObjectType({
     traveledWith: {
       type: new GraphQLNonNull(GraphQLString),
       dexcription: 'Traveled with'
+    },
+    entryDate: {
+      type: GraphQLFloat,
+      description: 'Review entryDate'
+    },
+    travelDate: {
+      type: GraphQLFloat,
+      description: 'Review travelDate'
+    },
+    title: {
+      type: GraphQLString,
+      description: 'Review title',
+      resolve: (review) => getReviewTitle(review)
+    },
+    text: {
+      type: GraphQLString,
+      description: 'Review text',
+      resolve: (review) => getReviewTitle(review)
+    },
+    user: {
+      type: GraphQLString,
+      description: 'Review user'
+    },
+    locale: {
+      type: GraphQLString,
+      description: 'Review locale'
     }
   })
 });
