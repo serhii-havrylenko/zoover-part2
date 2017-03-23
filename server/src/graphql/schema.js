@@ -199,7 +199,13 @@ const accommodationType = new GraphQLObjectType({
           }
         })
       }),
-      resolve: (accommodation) => acc.getAccommodationRanking(accommodation.id)
+      args: {
+        traveledWith: {
+          type: GraphQLString,
+          description: 'Filter by traveled with value'
+        }
+      },
+      resolve: (accommodation, { traveledWith }) => acc.getAccommodationRanking(accommodation.id, traveledWith)
     },
     reviews: {
       type: new GraphQLObjectType({
@@ -232,10 +238,7 @@ const accommodationType = new GraphQLObjectType({
         }
       },
       resolve: (accommodation, { first = 10, offset = 0, sortBy = 'travelDate', traveledWith }) => {
-        let reviews = acc.getReviews(accommodation.id);
-        if (traveledWith) {
-          reviews = reviews.filter((review) => review.traveledWith.toLowerCase() === traveledWith.toLowerCase());
-        }
+        let reviews = acc.getReviews(accommodation.id, traveledWith);
 
         const offsetIndex = offset;
         const edges = reviews.slice(offsetIndex, offsetIndex + first)

@@ -11,10 +11,10 @@ const queryAccommodationsAndTraveledWith = gql`
 `;
 
 const queryAccommodationRanking = gql`
-  query AccommodationRanking($id: String) {
+  query AccommodationRanking($id: String, $traveledWith: String) {
     accommodation(id: $id) {
       id
-      ranking {
+      ranking (traveledWith: $traveledWith) {
         general
         aspects {
           location
@@ -108,11 +108,12 @@ export class AccommodationsService {
     })
   }
 
-  getAccommodationRanking(id: string): Observable<any> {
+  getAccommodationRanking(id: string, traveledWith: string): Observable<any> {
     return this.apollo.watchQuery({
       query: queryAccommodationRanking,
       variables: {
-        id: id
+        id,
+        traveledWith
       }
     })
   }

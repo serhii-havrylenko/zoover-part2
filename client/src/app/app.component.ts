@@ -21,11 +21,12 @@ export class AppComponent implements OnInit {
   private accommodationID: string;
   private sortBy: string = 'travelDate';
   private total: number = 0;
-  private first: number = 9;
+  private first: number = 3;
   private offset: number = 0;
   private reviews: any[] = [];
   private generalRating: string;
   private aspectsRating: any;
+  private showZeroRating: boolean = false;
 
   constructor(private accommodationsService: AccommodationsService) { }
 
@@ -42,7 +43,7 @@ export class AppComponent implements OnInit {
   }
 
   loadRanking() {
-    this.accommodationsService.getAccommodationRanking(this.accommodationID).subscribe(
+    this.accommodationsService.getAccommodationRanking(this.accommodationID, this.traveledWithFilter).subscribe(
       ({data}: any) => {
         this.generalRating = data.accommodation.ranking.general;
         this.aspectsRating = data.accommodation.ranking.aspects;
@@ -69,6 +70,11 @@ export class AppComponent implements OnInit {
   filterReviews() {
     this.reviews = [];
     this.offset = 0;
+    this.loadRanking();
     this.loadReviews();
+  }
+
+  generalRatingFloor(rating: number): number {
+    return Math.floor(rating * 10000) / 10000;
   }
 }

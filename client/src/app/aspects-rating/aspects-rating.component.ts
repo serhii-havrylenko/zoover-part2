@@ -25,7 +25,7 @@ export class AspectsRatingComponent implements OnInit {
     culture: 'Culture',
     surrounding: 'Surrounding',
     atmosphere: 'Atmosphere',
-    noviceSkiArea: 'Novice ski Area',
+    noviceSkiArea: 'Novice ski area',
     advancedSkiArea: 'Advanced ski area',
     apresSki: 'Apres ski',
     beach: 'Beach',
@@ -34,6 +34,8 @@ export class AspectsRatingComponent implements OnInit {
     pool: 'Pool',
     terrace: 'Terrace'
   };
+  @Input()
+  showZero: boolean = true;
 
   constructor() { }
 

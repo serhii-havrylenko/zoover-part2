@@ -18,19 +18,19 @@
         <md-option [value]="'entryDate'">Review date</md-option>
       </md-select>
     </div>
+
+    <div fxFlex="20">
+      <md-checkbox [(ngModel)]="showZeroRating">Show ranking with 0</md-checkbox>
+    </div>
     <div fxFlex></div>
   </div>
 
   <td-layout-card-over cardTitle="Accommodataion review" cardWidth="90">
     <md-card>
-      <md-card-title>Rating</md-card-title>
-      <md-card-subtitle>General</md-card-subtitle>
-      <md-card-content>
-        <md-chip-list>
-          <md-chip color="primary" selected>{{generalRating}}</md-chip>
-        </md-chip-list>
-      </md-card-content>
-      <md-divider></md-divider>
+      <md-card-title>Rating<span *ngIf="traveledWithFilter"> calculated by traveled with <b>{{traveledWithFilter}}</b></span></md-card-title>
+      <md-card-subtitle>
+        General <md-chip color="primary" selected>{{generalRatingFloor(generalRating)}}</md-chip>
+      </md-card-subtitle>
       <md-card-subtitle>Aspects</md-card-subtitle>
       <md-card-content>
         <aspects-rating [ranking]="aspectsRating"></aspects-rating>
@@ -61,7 +61,7 @@
         </md-card-subtitle>
         <md-card-subtitle *ngIf="review.ranking">Aspects</md-card-subtitle>
         <md-card-content *ngIf="review.ranking">
-          <aspects-rating [ranking]="review.ranking.aspects"></aspects-rating>
+          <aspects-rating [ranking]="review.ranking.aspects" [showZero]="showZeroRating"></aspects-rating>
         </md-card-content>
         <md-divider></md-divider>
       </md-card>

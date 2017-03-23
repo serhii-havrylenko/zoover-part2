@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class ChunkPipe implements PipeTransform {
 
-  transform(value: any, chunkSize: any): any {
+  transform(value: any, chunkSize: number): any {
     if (!value || !Array.isArray(value)) {
       return value;
     }
